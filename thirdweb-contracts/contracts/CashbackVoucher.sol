@@ -9,9 +9,13 @@ import {ByteHasher} from "ByteHasher.sol";
 import {IWorldID} from "IWorldID.sol";
 
 contract CashbackVoucher is ERC721Base, PermissionsEnumerable {
+    bool running;
+
     string baseURI;
 
     using ByteHasher for bytes;
+
+    error VouchersNotReleased();
 
     /// @notice Thrown when attempting to reuse a nullifier
     error InvalidNullifier();
@@ -39,6 +43,7 @@ contract CashbackVoucher is ERC721Base, PermissionsEnumerable {
         string memory _appId,
         string memory _actionId
     ) ERC721Base(_name, _symbol, _royaltyRecipient, _royaltyBps) {
+        running = false;
         baseURI = _baseURI;
         worldId = _worldId;
         externalNullifier = abi
@@ -47,10 +52,16 @@ contract CashbackVoucher is ERC721Base, PermissionsEnumerable {
         _setupRole(DEFAULT_ADMIN_ROLE, _admin);
     }
 
+    function releaseVouchers() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        running = true;
+    }
+
     function burnVouchers() external onlyRole(DEFAULT_ADMIN_ROLE) {
         for (uint tokenId = 0; tokenId < _currentIndex; tokenId++) {
             _burn(tokenId);
         }
+
+        running = false;
     }
 
     function mintVoucher(
@@ -60,6 +71,8 @@ contract CashbackVoucher is ERC721Base, PermissionsEnumerable {
         uint256 nullifierHash,
         uint256[8] calldata proof
     ) public {
+        if (!running) revert VouchersNotReleased();
+
         // First, we make sure this person hasn't done this before
         if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
 
