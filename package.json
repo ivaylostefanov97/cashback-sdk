@@ -19,8 +19,9 @@
   },
   "homepage": "https://github.com/ivaylostefanov97/cashback-sdk#readme",
   "dependencies": {
+    "@thirdweb-dev/sdk": "^3.10.14",
     "dotenv": "^16.0.3",
-    "ethers": "^6.3.0",
+    "ethers": "^5",
     "mathjs": "^11.8.0",
     "moralis": "^2.20.0",
     "prisma": "^4.14.0"

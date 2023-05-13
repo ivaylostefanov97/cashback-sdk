@@ -1,8 +1,7 @@
 import { AbiItem } from "@moralisweb3/streams-typings";
-import { BigNumberish } from "ethers";
 
 
-export type FilterLeaf = { [k: string]: [string, string | BigNumberish] }
+export type FilterLeaf = { [k: string]: [string, string | BigInt] }
 export type FilterNode = FilterLeaf | { [k: string]: FilterNode[] }
 
 export type Journey = {

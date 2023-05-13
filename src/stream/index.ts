@@ -2,13 +2,13 @@ import Moralis from "moralis";
 import dotenv from 'dotenv';
 
 import { EvmChain } from "@moralisweb3/common-evm-utils";
-import { FilterNode, Journey } from "../common/journey";
+import { FilterNode, Journey } from "../common/journey-types";
 
 
 dotenv.config();
 
 
-export const addContractListener = async (name: string, contractAddress: string, journey: Journey[], mainFilter?: FilterNode) => {
+export const addContractListener = async (name: string, contractAddress: string, campaignOptionsURI: string, journey: Journey[], mainFilter?: FilterNode) => {
     try {
 
         const { event, eventAbi } = journey.find(journeyEntry => journeyEntry.isMain)!;
@@ -23,7 +23,7 @@ export const addContractListener = async (name: string, contractAddress: string,
         const streamOptions = {
             chains: [EvmChain.MUMBAI],
             description: "monitor smart contract",
-            tag: name,
+            tag: campaignOptionsURI,
             webhookUrl: `${process.env.WEBHOOK_URL}/event`,
             includeContractLogs: true,
             advancedOptions: mainFilter ? [{ topic0: event!, filter: mainFilter }] : [],
