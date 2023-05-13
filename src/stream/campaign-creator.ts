@@ -1,8 +1,12 @@
-import { FilterNode, Journey } from "../common/journey-types";
+import { Journey } from "../common/journey-types";
 import { uploadJSON } from "../utils/storage";
 
 import Moralis from "moralis";
 import { EvmChain } from "@moralisweb3/common-evm-utils";
+
+import Web3 from 'web3';
+
+const web3 = new Web3();
 
 import dotenv from 'dotenv';
 
@@ -11,13 +15,14 @@ dotenv.config();
 export const createCampaign = async (
     name: string,
     contractAddress: string,
+    numberOfParticipants: number,
     journey: Journey[],
-    mainFilter?: FilterNode,
 ) => {
 
-    const campaignOptionsURI = await uploadJSON({});
+    const campaignOptionsURI = await uploadJSON({name, contractAddress, numberOfParticipants, journey});
+    console.log("campaign options uri: ", JSON.stringify(campaignOptionsURI, null, 4))
 
-    const streamId = await addContractListener(name, contractAddress, campaignOptionsURI, journey, mainFilter);
+    const streamId = await addContractListener(name, contractAddress, campaignOptionsURI, journey);
     return streamId;
 }
 
@@ -25,15 +30,19 @@ const addContractListener = async (
     name: string, 
     contractAddress: string, 
     campaignOptionsURI: string, 
-    journey: Journey[], 
-    mainFilter?: FilterNode
+    journey: Journey[]
 ) => {
     try {
 
         const { event, eventAbi } = journey.find(journeyEntry => journeyEntry.isMain)!;
 
         const streams = await Moralis.Streams.getAll({ networkType: "evm", limit: 10 });
+
+        console.log("STREAM_LIST: ", streams)
+
         let stream = streams.toJSON().result.find(stream => stream.tag === name);
+
+        console.log("STREAM: ", stream)
 
         if (stream) {
             return { error: "Contract listener already set." }
@@ -45,10 +54,12 @@ const addContractListener = async (
             tag: campaignOptionsURI,
             webhookUrl: `${process.env.WEBHOOK_URL}/event`,
             includeContractLogs: true,
-            advancedOptions: mainFilter ? [{ topic0: event!, filter: mainFilter }] : [],
-            abi: eventAbi as any,
-            topic0: [event!]
+            // advancedOptions: [{ topic0: event!, filter: {} }],
+            abi: [eventAbi],
+            topic0: [web3.eth.abi.encodeEventSignature(eventAbi as any)]
         }
+
+        console.log("STREAM OPTIONS ", JSON.stringify(streamOptions, null, 4))
 
         stream = (await Moralis.Streams.add(streamOptions)).toJSON();
 
