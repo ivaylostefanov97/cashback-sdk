@@ -2,12 +2,13 @@
 pragma solidity ^0.8.10;
 
 import "@thirdweb-dev/contracts/base/ERC721Base.sol";
+import "@thirdweb-dev/contracts/extension/PermissionsEnumerable.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
 
-import {IWorldID} from "IWorldID.sol";
 import {ByteHasher} from "ByteHasher.sol";
+import {IWorldID} from "IWorldID.sol";
 
-contract CashbackVoucher is ERC721Base {
+contract CashbackVoucher is ERC721Base, PermissionsEnumerable {
     string baseURI;
 
     using ByteHasher for bytes;
@@ -33,6 +34,7 @@ contract CashbackVoucher is ERC721Base {
         string memory _baseURI,
         address _royaltyRecipient,
         uint128 _royaltyBps,
+        address _admin,
         IWorldID _worldId,
         string memory _appId,
         string memory _actionId
@@ -42,9 +44,16 @@ contract CashbackVoucher is ERC721Base {
         externalNullifier = abi
             .encodePacked(abi.encodePacked(_appId).hashToField(), _actionId)
             .hashToField();
+        _setupRole(DEFAULT_ADMIN_ROLE, _admin);
     }
 
-    function mint(
+    function burnVouchers() external onlyRole(DEFAULT_ADMIN_ROLE) {
+        for (uint tokenId = 0; tokenId < _currentIndex; tokenId++) {
+            _burn(tokenId);
+        }
+    }
+
+    function mintVoucher(
         address _to,
         address signal,
         uint256 root,
