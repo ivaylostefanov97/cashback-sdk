@@ -53,7 +53,7 @@ export const mintVoucher = async (options: MintVoucherOptions) => {
     console.log("Unpacked Proof: ", unpackedProof)
 
     const voucherFactory = CashbackVoucher__factory.connect(
-        String(process.env.CAMPAIGN_FACTORY),
+        String("0xe769C331826a37f79A13c65c40C53E74e01E6191"),
         wallet
     );
 
