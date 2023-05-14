@@ -4,6 +4,8 @@ import { checkUserHasToken } from "./gating";
 import { ContractTransaction, ethers, Wallet } from "ethers";
 import { CashbackCampaignFactory__factory, CashbackVoucher__factory } from "../../typechain-types";
 
+const dataJson = require('../utils/cache.json');
+
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -28,7 +30,6 @@ type MintVoucherOptions = {
         proof: string,
     },
     walletAddress: string,
-    tokenAddress: string
 }
 
 export const mintVoucher = async (options: MintVoucherOptions) => {
@@ -52,16 +53,32 @@ export const mintVoucher = async (options: MintVoucherOptions) => {
     const unpackedProof = defaultAbiCoder.decode(['uint256[8]'], humanityProof.proof)[0];
     console.log("Unpacked Proof: ", unpackedProof)
 
-    const voucherFactory = CashbackVoucher__factory.connect(
-        String("0xe769C331826a37f79A13c65c40C53E74e01E6191"),
+    const cashbackCampaignFactory = CashbackCampaignFactory__factory.connect(
+        String("0xFe123F01178494997F85041011C60F2d956729B0"),
         wallet
     );
 
+    const voucher = await cashbackCampaignFactory.lastCreatedVoucher();
+
+    console.log("VOUCHER contract: ", voucher)
+
+    const voucherFactory = CashbackVoucher__factory.connect(
+        String(voucher),
+        wallet
+    );
+
+    console.log("wallet address: ", walletAddress)
+    console.log("IPFS LINK: ", Object.keys(dataJson)[0])
+
+    const uri = `https://gateway.pinata.cloud/ipfs/${Object.keys(dataJson)[0].replace("ipfs://", "")}`
+
+    console.log("IPFS uri: ", uri)
+
     const mintVoucherTx = await voucherFactory.mintVoucher(
-        process.env.CUSTODIAN_ADDRESS!, 
-        process.env.CUSTODIAN_ADDRESS!, 
-        humanityProof.merkle_root, 
-        humanityProof.nullifier_hash, 
+        walletAddress,
+        walletAddress,
+        humanityProof.merkle_root,
+        humanityProof.nullifier_hash,
         unpackedProof
     )
     console.log("mintVoucherTx: ", mintVoucherTx)

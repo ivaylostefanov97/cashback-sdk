@@ -13,7 +13,7 @@ const web3 = new Web3();
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { CashbackCampaign__factory, CashbackCampaignFactory__factory } from "../../typechain-types";
+import { CashbackCampaign__factory, CashbackCampaignFactory__factory, TokenB__factory } from "../../typechain-types";
 
 const nodeProvider = new ethers.providers.InfuraProvider(process.env.NETWORK, process.env.INFURA);
 const wallet = new Wallet(String(process.env.CUSTODIAN_KEY), nodeProvider);
@@ -85,13 +85,21 @@ export const createCampaign = async (
     if (!receipt.status)
         throw new Error("minting failed.");
 
-    const campaign = await createCampaignTx.lastCreatedCampaign()
+    const campaign = await cashbackCampaignFactory.lastCreatedCampaign()
 
     if (!campaign)
         throw new Error(`Campaign creation failed for owner: ${campaign}.`);
 
-    console.log("campaign created: ", campaign)
+    console.log("campaign created: ", campaign);
 
+    const tokenB = TokenB__factory.connect(
+        String("0x586b1e2b9E569E8e75202BF1125622A6cA9C44B0"),
+        wallet
+    );
+
+    const approveTx = await tokenB.approve(campaign, 10);
+    const approveReceipt = await approveTx.wait();
+    
     const cashbackCampaign = CashbackCampaign__factory.connect(
         String(campaign),
         wallet
