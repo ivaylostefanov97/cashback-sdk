@@ -4,3 +4,4 @@
 export * as cashbackVoucherSol from "./CashbackVoucher.sol";
 export { CashbackCampaign__factory } from "./CashbackCampaign__factory";
 export { CashbackCampaignFactory__factory } from "./CashbackCampaignFactory__factory";
+export { TokenB__factory } from "./TokenB__factory";
