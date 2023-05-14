@@ -1,4 +1,5 @@
-import { checkUserHasToken } from "./gating"
+import { defaultAbiCoder } from "ethers/lib/utils";
+import { checkUserHasToken } from "./gating";
 
 
 type MintVoucherOptions = {
@@ -10,11 +11,17 @@ type MintVoucherOptions = {
         tokenAddress: string,
         minBalance: number
     },
+    humanityProof?: {
+        credential_type: string,
+        merkle_root: string,
+        nullifier_hash: string,
+        proof: string,
+    },
     walletAddress: string,
 }
 
 export const mintVoucher = async (options: MintVoucherOptions) => {
-    const { walletAddress, tokenGate, nftGate } = options;
+    const { walletAddress, tokenGate, nftGate, humanityProof } = options;
 
     if (tokenGate) {
         const isEligible =  await checkUserHasToken(walletAddress, tokenGate.tokenAddress, tokenGate.minBalance)
@@ -30,5 +37,9 @@ export const mintVoucher = async (options: MintVoucherOptions) => {
         }
     }
 
-    
+    if (humanityProof) {
+        console.log("Inside humanity proof")
+        const unpackedProof = defaultAbiCoder.decode(['uint256[8]'], humanityProof.proof)[0];
+        console.log("Unpacked Proof: ", unpackedProof)
+    }
 }

@@ -2,10 +2,12 @@ import Moralis from "moralis";
 
 import { createCampaign } from "./stream";
 import { handleContractEvent } from "./event";
+import { mintVoucher } from "./voucher";
 
 export type CashbackSDK = {
     createCampaign: typeof createCampaign;
     handleContractEvent: typeof handleContractEvent;
+    mintVoucher: typeof mintVoucher
 }
 
 export const initCashbackSDK = async (cb: Function) => {
@@ -19,6 +21,7 @@ export const initCashbackSDK = async (cb: Function) => {
 
     await cb({
         createCampaign,
-        handleContractEvent
+        handleContractEvent,
+        mintVoucher
     })
 }
