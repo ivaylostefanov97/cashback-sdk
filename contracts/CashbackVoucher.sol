@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.10;
+pragma solidity ^0.8.10;
 
 import "@thirdweb-dev/contracts/base/ERC721Base.sol";
 import "@thirdweb-dev/contracts/extension/PermissionsEnumerable.sol";
@@ -26,7 +26,7 @@ interface IWorldID {
 }
 
 contract CashbackVoucher is ERC721Base, SoulboundERC721A {
-    bool running;
+    bool public running;
 
     string baseURI;
 
@@ -65,7 +65,7 @@ contract CashbackVoucher is ERC721Base, SoulboundERC721A {
             abi.encodePacked(hashToField(abi.encodePacked(_appId)), _actionId)
         );
         _setupRole(DEFAULT_ADMIN_ROLE, _admin);
-        restrictTransfers(true);
+        restrictTransfers(false);
     }
 
     function releaseVouchers() public onlyRole(DEFAULT_ADMIN_ROLE) {
@@ -134,6 +134,7 @@ contract CashbackVoucher is ERC721Base, SoulboundERC721A {
         uint256,
         uint256
     ) internal override(ERC721A, SoulboundERC721A) {
+        require(from == address(0) || to == address(0), "Soulbound token.");
         super._beforeTokenTransfers(from, to, 0, 0);
     }
 

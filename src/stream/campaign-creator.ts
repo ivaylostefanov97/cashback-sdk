@@ -1,5 +1,7 @@
+import { ContractTransaction, ethers, Wallet } from "ethers";
+
 import { Journey } from "../common/journey-types";
-import { uploadJSON } from "../utils/storage";
+import { uploadJSON, uploadBatchJSON } from "../utils/storage";
 
 import Moralis from "moralis";
 import { EvmChain } from "@moralisweb3/common-evm-utils";
@@ -12,14 +14,39 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
+const nodeProvider = new ethers.providers.InfuraProvider(process.env.NETWORK, process.env.ALCHEMY_GOERLI_API_KEY);
+const wallet = new Wallet(String(process.env.CUSTODIAN_KEY), nodeProvider);
+
+export const createMetadata = async (collectionSize: number, collectionName: string, description: string, rewardType: string, rewardSize: number) => {
+    const jsonArray: any[] = [];
+    for (let i = 0; i < collectionSize; i++) {
+        const metadataJson = JSON.stringify({
+            "name": `${collectionName} #${i}`,
+            "description": description,
+            "image": "",
+            "attributes": [
+                {
+                    "incentive_type": "Cashback",
+                    "reward_type": rewardType,
+                    "reward_size": rewardSize
+                }
+            ]
+        }, null, 4);
+        jsonArray.push(metadataJson)
+    }
+
+    const campaignOptionsURI = await uploadBatchJSON(jsonArray);
+
+    return campaignOptionsURI;
+}
+
 export const createCampaign = async (
     name: string,
     contractAddress: string,
     numberOfParticipants: number,
     journey: Journey[],
 ) => {
-
-    const campaignOptionsURI = await uploadJSON({name, contractAddress, numberOfParticipants, journey});
+    const campaignOptionsURI = await uploadJSON({ name, contractAddress, numberOfParticipants, journey });
     console.log("campaign options uri: ", JSON.stringify(campaignOptionsURI, null, 4))
 
     const streamId = await addContractListener(name, contractAddress, campaignOptionsURI, journey);
@@ -27,9 +54,9 @@ export const createCampaign = async (
 }
 
 const addContractListener = async (
-    name: string, 
-    contractAddress: string, 
-    campaignOptionsURI: string, 
+    name: string,
+    contractAddress: string,
+    campaignOptionsURI: string,
     journey: Journey[]
 ) => {
     try {

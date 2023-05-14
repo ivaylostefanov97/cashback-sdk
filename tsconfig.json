@@ -102,6 +102,7 @@
         "./scripts",
         "./test",
         "./typechain-types",
+        "./src"
     ],
     "files": [
         "hardhat.config.js"
