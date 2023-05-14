@@ -57,10 +57,19 @@ export const mintVoucher = async (options: MintVoucherOptions) => {
         wallet
     );
 
-    const mintVoucherTx = await voucherFactory.mintVoucher(process.env.CUSTODIAN_ADDRESS!, process.env.CUSTODIAN_ADDRESS!, humanityProof.merkle_root, humanityProof.nullifier_hash, unpackedProof)
-
+    const mintVoucherTx = await voucherFactory.mintVoucher(
+        process.env.CUSTODIAN_ADDRESS!, 
+        process.env.CUSTODIAN_ADDRESS!, 
+        humanityProof.merkle_root, 
+        humanityProof.nullifier_hash, 
+        unpackedProof
+    )
+    console.log("mintVoucherTx: ", mintVoucherTx)
     const receipt = await mintVoucherTx.wait();
 
+    console.log("receipt before: ", receipt)
     if (!receipt.status)
         throw new Error("minting failed.");
+
+    console.log("receipt: ", receipt)
 }
