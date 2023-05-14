@@ -1,5 +1,3 @@
-import { ContractTransaction, ethers, Wallet } from "ethers";
-
 import { Journey } from "../common/journey-types";
 import { uploadJSON, uploadBatchJSON } from "../utils/storage";
 
@@ -13,9 +11,6 @@ const web3 = new Web3();
 import dotenv from 'dotenv';
 
 dotenv.config();
-
-const nodeProvider = new ethers.providers.InfuraProvider(process.env.NETWORK, process.env.ALCHEMY_GOERLI_API_KEY);
-const wallet = new Wallet(String(process.env.CUSTODIAN_KEY), nodeProvider);
 
 export const createMetadata = async (collectionSize: number, collectionName: string, description: string, rewardType: string, rewardSize: number) => {
     const jsonArray: any[] = [];
