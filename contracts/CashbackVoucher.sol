@@ -58,7 +58,7 @@ contract CashbackVoucher is ERC721Base, SoulboundERC721A {
         string memory _appId,
         string memory _actionId
     ) ERC721Base(_name, _symbol, _royaltyRecipient, _royaltyBps) {
-        running = false;
+        running = true;
         baseURI = _baseURI;
         worldId = _worldId;
         externalNullifier = hashToField(
@@ -81,30 +81,30 @@ contract CashbackVoucher is ERC721Base, SoulboundERC721A {
     }
 
     function mintVoucher(
-        address _to,
+        address _to /*,
         address signal,
         uint256 root,
         uint256 nullifierHash,
-        uint256[8] calldata proof
+        uint256[8] calldata proof*/
     ) public {
         if (!running) revert VouchersNotReleased();
-
+        /*
         // First, we make sure this person hasn't done this before
         if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
 
         // We now verify the provided proof is valid and the user is verified by World ID
-        /*worldId.verifyProof(
+        worldId.verifyProof(
             root,
             groupId,
             hashToField(abi.encodePacked(signal)),
             nullifierHash,
             externalNullifier,
             proof
-        );*/
+        );
 
         // We now record the user has done this, so they can't do it again (proof of uniqueness)
-        nullifierHashes[nullifierHash] = true;
-
+        // nullifierHashes[nullifierHash] = true;
+        */
         uint256 tokenId = nextTokenIdToMint();
 
         string memory uri = tokenURI(tokenId);

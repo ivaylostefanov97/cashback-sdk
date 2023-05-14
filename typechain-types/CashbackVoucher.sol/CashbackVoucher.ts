@@ -53,7 +53,7 @@ export interface CashbackVoucherInterface extends utils.Interface {
     "isApprovedForAll(address,address)": FunctionFragment;
     "isApprovedOrOwner(address,uint256)": FunctionFragment;
     "mintTo(address,string)": FunctionFragment;
-    "mintVoucher(address,address,uint256,uint256,uint256[8])": FunctionFragment;
+    "mintVoucher(address)": FunctionFragment;
     "multicall(bytes[])": FunctionFragment;
     "name()": FunctionFragment;
     "nextTokenIdToMint()": FunctionFragment;
@@ -240,13 +240,7 @@ export interface CashbackVoucherInterface extends utils.Interface {
   ): string;
   encodeFunctionData(
     functionFragment: "mintVoucher",
-    values: [
-      PromiseOrValue<string>,
-      PromiseOrValue<string>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>,
-      PromiseOrValue<BigNumberish>[]
-    ]
+    values: [PromiseOrValue<string>]
   ): string;
   encodeFunctionData(
     functionFragment: "multicall",
@@ -829,10 +823,6 @@ export interface CashbackVoucher extends BaseContract {
 
     mintVoucher(
       _to: PromiseOrValue<string>,
-      signal: PromiseOrValue<string>,
-      root: PromiseOrValue<BigNumberish>,
-      nullifierHash: PromiseOrValue<BigNumberish>,
-      proof: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
@@ -1075,10 +1065,6 @@ export interface CashbackVoucher extends BaseContract {
 
   mintVoucher(
     _to: PromiseOrValue<string>,
-    signal: PromiseOrValue<string>,
-    root: PromiseOrValue<BigNumberish>,
-    nullifierHash: PromiseOrValue<BigNumberish>,
-    proof: PromiseOrValue<BigNumberish>[],
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
@@ -1319,10 +1305,6 @@ export interface CashbackVoucher extends BaseContract {
 
     mintVoucher(
       _to: PromiseOrValue<string>,
-      signal: PromiseOrValue<string>,
-      root: PromiseOrValue<BigNumberish>,
-      nullifierHash: PromiseOrValue<BigNumberish>,
-      proof: PromiseOrValue<BigNumberish>[],
       overrides?: CallOverrides
     ): Promise<void>;
 
@@ -1680,10 +1662,6 @@ export interface CashbackVoucher extends BaseContract {
 
     mintVoucher(
       _to: PromiseOrValue<string>,
-      signal: PromiseOrValue<string>,
-      root: PromiseOrValue<BigNumberish>,
-      nullifierHash: PromiseOrValue<BigNumberish>,
-      proof: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
@@ -1931,10 +1909,6 @@ export interface CashbackVoucher extends BaseContract {
 
     mintVoucher(
       _to: PromiseOrValue<string>,
-      signal: PromiseOrValue<string>,
-      root: PromiseOrValue<BigNumberish>,
-      nullifierHash: PromiseOrValue<BigNumberish>,
-      proof: PromiseOrValue<BigNumberish>[],
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<PopulatedTransaction>;
 
