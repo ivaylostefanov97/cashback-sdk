@@ -4,10 +4,16 @@ import { getParsedLogs, getTransactionsByLogs } from "./utils";
 import Web3 from 'web3';
 import { Journey } from "../common/journey-types";
 import { checkEventMatchJourneyFilter } from "./journey";
+import { CashbackCampaign__factory } from "../../typechain-types";
+
+import { ethers, Wallet } from "ethers";
 
 const web3 = new Web3();
 
 const campaignOptionsCache: Record<string, any> = {}
+
+const nodeProvider = new ethers.providers.InfuraProvider(process.env.NETWORK, process.env.INFURA);
+const wallet = new Wallet(String(process.env.CUSTODIAN_KEY), nodeProvider);
 
 export const handleContractEvent = async (webhookData: IWebhook) => {
     const parsedWebhookLogs = [
@@ -76,9 +82,22 @@ export const handleContractEvent = async (webhookData: IWebhook) => {
             })
         );
 
-        // TODO: send transaction hash and from_address to smart contract
-
         console.log("FILTERED LOG DETAILS: ", JSON.stringify(filteredLogDetails, null, 4))
+
+        if (filteredLogDetails.length === 0 ) {
+            return;
+        }
+
+        const cashbackCampaignFactory = CashbackCampaign__factory.connect(
+            String(campaignOptions.campaignAddress),
+            wallet
+        );
+
+        for (const { transaction } of filteredLogDetails) {
+            const cbCampaignTx = await cashbackCampaignFactory.incrementRewardBalance(transaction.from_address, campaignOptions.rewardSize);
+            const receipt = await cbCampaignTx.wait();
+            console.log("Receipt: ", receipt);
+        }
 
     } catch (err) {
         console.error(err);
