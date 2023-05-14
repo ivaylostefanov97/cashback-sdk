@@ -65,6 +65,7 @@ export interface CashbackVoucherInterface extends utils.Interface {
     "restrictTransfers(bool)": FunctionFragment;
     "revokeRole(bytes32,address)": FunctionFragment;
     "royaltyInfo(uint256,uint256)": FunctionFragment;
+    "running()": FunctionFragment;
     "safeTransferFrom(address,address,uint256)": FunctionFragment;
     "safeTransferFrom(address,address,uint256,bytes)": FunctionFragment;
     "setApprovalForAll(address,bool)": FunctionFragment;
@@ -119,6 +120,7 @@ export interface CashbackVoucherInterface extends utils.Interface {
       | "restrictTransfers"
       | "revokeRole"
       | "royaltyInfo"
+      | "running"
       | "safeTransferFrom(address,address,uint256)"
       | "safeTransferFrom(address,address,uint256,bytes)"
       | "setApprovalForAll"
@@ -284,6 +286,7 @@ export interface CashbackVoucherInterface extends utils.Interface {
     functionFragment: "royaltyInfo",
     values: [PromiseOrValue<BigNumberish>, PromiseOrValue<BigNumberish>]
   ): string;
+  encodeFunctionData(functionFragment: "running", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     values: [
@@ -466,6 +469,7 @@ export interface CashbackVoucherInterface extends utils.Interface {
     functionFragment: "royaltyInfo",
     data: BytesLike
   ): Result;
+  decodeFunctionResult(functionFragment: "running", data: BytesLike): Result;
   decodeFunctionResult(
     functionFragment: "safeTransferFrom(address,address,uint256)",
     data: BytesLike
@@ -879,6 +883,8 @@ export interface CashbackVoucher extends BaseContract {
       [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
     >;
 
+    running(overrides?: CallOverrides): Promise<[boolean]>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1123,6 +1129,8 @@ export interface CashbackVoucher extends BaseContract {
     [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
   >;
 
+  running(overrides?: CallOverrides): Promise<boolean>;
+
   "safeTransferFrom(address,address,uint256)"(
     from: PromiseOrValue<string>,
     to: PromiseOrValue<string>,
@@ -1362,6 +1370,8 @@ export interface CashbackVoucher extends BaseContract {
     ): Promise<
       [string, BigNumber] & { receiver: string; royaltyAmount: BigNumber }
     >;
+
+    running(overrides?: CallOverrides): Promise<boolean>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
@@ -1722,6 +1732,8 @@ export interface CashbackVoucher extends BaseContract {
       overrides?: CallOverrides
     ): Promise<BigNumber>;
 
+    running(overrides?: CallOverrides): Promise<BigNumber>;
+
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,
       to: PromiseOrValue<string>,
@@ -1972,6 +1984,8 @@ export interface CashbackVoucher extends BaseContract {
       salePrice: PromiseOrValue<BigNumberish>,
       overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
+
+    running(overrides?: CallOverrides): Promise<PopulatedTransaction>;
 
     "safeTransferFrom(address,address,uint256)"(
       from: PromiseOrValue<string>,

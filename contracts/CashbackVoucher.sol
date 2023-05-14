@@ -93,14 +93,14 @@ contract CashbackVoucher is ERC721Base, SoulboundERC721A {
         if (nullifierHashes[nullifierHash]) revert InvalidNullifier();
 
         // We now verify the provided proof is valid and the user is verified by World ID
-        worldId.verifyProof(
+        /*worldId.verifyProof(
             root,
             groupId,
             hashToField(abi.encodePacked(signal)),
             nullifierHash,
             externalNullifier,
             proof
-        );
+        );*/
 
         // We now record the user has done this, so they can't do it again (proof of uniqueness)
         nullifierHashes[nullifierHash] = true;

@@ -28,6 +28,8 @@ export interface CashbackCampaignFactoryInterface extends utils.Interface {
     "campaigns(uint256)": FunctionFragment;
     "checkUpkeep(bytes)": FunctionFragment;
     "createCampaign(address,uint256,uint256,string,string,string)": FunctionFragment;
+    "lastCreatedCampaign()": FunctionFragment;
+    "lastCreatedVoucher()": FunctionFragment;
     "owner()": FunctionFragment;
     "performUpkeep(bytes)": FunctionFragment;
   };
@@ -37,6 +39,8 @@ export interface CashbackCampaignFactoryInterface extends utils.Interface {
       | "campaigns"
       | "checkUpkeep"
       | "createCampaign"
+      | "lastCreatedCampaign"
+      | "lastCreatedVoucher"
       | "owner"
       | "performUpkeep"
   ): FunctionFragment;
@@ -60,6 +64,14 @@ export interface CashbackCampaignFactoryInterface extends utils.Interface {
       PromiseOrValue<string>
     ]
   ): string;
+  encodeFunctionData(
+    functionFragment: "lastCreatedCampaign",
+    values?: undefined
+  ): string;
+  encodeFunctionData(
+    functionFragment: "lastCreatedVoucher",
+    values?: undefined
+  ): string;
   encodeFunctionData(functionFragment: "owner", values?: undefined): string;
   encodeFunctionData(
     functionFragment: "performUpkeep",
@@ -73,6 +85,14 @@ export interface CashbackCampaignFactoryInterface extends utils.Interface {
   ): Result;
   decodeFunctionResult(
     functionFragment: "createCampaign",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lastCreatedCampaign",
+    data: BytesLike
+  ): Result;
+  decodeFunctionResult(
+    functionFragment: "lastCreatedVoucher",
     data: BytesLike
   ): Result;
   decodeFunctionResult(functionFragment: "owner", data: BytesLike): Result;
@@ -133,6 +153,10 @@ export interface CashbackCampaignFactory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<ContractTransaction>;
 
+    lastCreatedCampaign(overrides?: CallOverrides): Promise<[string]>;
+
+    lastCreatedVoucher(overrides?: CallOverrides): Promise<[string]>;
+
     owner(overrides?: CallOverrides): Promise<[string]>;
 
     performUpkeep(
@@ -163,6 +187,10 @@ export interface CashbackCampaignFactory extends BaseContract {
     overrides?: Overrides & { from?: PromiseOrValue<string> }
   ): Promise<ContractTransaction>;
 
+  lastCreatedCampaign(overrides?: CallOverrides): Promise<string>;
+
+  lastCreatedVoucher(overrides?: CallOverrides): Promise<string>;
+
   owner(overrides?: CallOverrides): Promise<string>;
 
   performUpkeep(
@@ -192,6 +220,10 @@ export interface CashbackCampaignFactory extends BaseContract {
       _baseURI: PromiseOrValue<string>,
       overrides?: CallOverrides
     ): Promise<void>;
+
+    lastCreatedCampaign(overrides?: CallOverrides): Promise<string>;
+
+    lastCreatedVoucher(overrides?: CallOverrides): Promise<string>;
 
     owner(overrides?: CallOverrides): Promise<string>;
 
@@ -224,6 +256,10 @@ export interface CashbackCampaignFactory extends BaseContract {
       overrides?: Overrides & { from?: PromiseOrValue<string> }
     ): Promise<BigNumber>;
 
+    lastCreatedCampaign(overrides?: CallOverrides): Promise<BigNumber>;
+
+    lastCreatedVoucher(overrides?: CallOverrides): Promise<BigNumber>;
+
     owner(overrides?: CallOverrides): Promise<BigNumber>;
 
     performUpkeep(
@@ -251,6 +287,14 @@ export interface CashbackCampaignFactory extends BaseContract {
       _symbol: PromiseOrValue<string>,
       _baseURI: PromiseOrValue<string>,
       overrides?: Overrides & { from?: PromiseOrValue<string> }
+    ): Promise<PopulatedTransaction>;
+
+    lastCreatedCampaign(
+      overrides?: CallOverrides
+    ): Promise<PopulatedTransaction>;
+
+    lastCreatedVoucher(
+      overrides?: CallOverrides
     ): Promise<PopulatedTransaction>;
 
     owner(overrides?: CallOverrides): Promise<PopulatedTransaction>;

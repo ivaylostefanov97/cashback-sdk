@@ -18,6 +18,10 @@ module.exports = {
         polygon: {
             url: `https://polygon-mainnet.infura.io/v3/344632511bbc4e979e61795e76cd3bce`,
             accounts: [process.env.CUSTODIAN_KEY]
+        },
+        mumbai: {
+            url: `https://polygon-mumbai.infura.io/v3/344632511bbc4e979e61795e76cd3bce`,
+            accounts: [process.env.CUSTODIAN_KEY]
         }
     }
 };

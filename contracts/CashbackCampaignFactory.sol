@@ -11,6 +11,8 @@ error NotOwner();
 contract CashbackCampaignFactory is AutomationCompatibleInterface {
     address public owner;
     address[] public campaigns;
+    address public lastCreatedCampaign;
+    address public lastCreatedVoucher;
 
     IWorldID internal immutable worldId;
     string appId;
@@ -65,6 +67,9 @@ contract CashbackCampaignFactory is AutomationCompatibleInterface {
             _startTime,
             _endTime
         );
+
+        lastCreatedCampaign = address(newCampaign);
+        lastCreatedVoucher = address(voucherCollection);
 
         campaigns.push(address(newCampaign));
         next.push(next.length + 1);
